@@ -1,0 +1,2 @@
+ON_LIGHT = 1
+OFF_LIGHT = 2
