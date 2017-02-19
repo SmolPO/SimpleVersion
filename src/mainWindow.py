@@ -16,7 +16,7 @@ from message_box import *
 from Configurate import ntuple_attrs
 from globals_variables import global_data as glb_d
 from toolMapInfo import ToolMapInfo
-
+from itertools import count
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -33,30 +33,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #self.layer_load()
         self.project = QgsProject.instance()
         self.project_load()
-        # lst = dir(self.lumlayer)
-        # for op in lst:
-        #     print op
-        # get = self.lumlayer.getFeatures()
-        # for v in get:
-        #     print(v)
-        #     print(dir(get))
-        #     print(dir(get.nextFeature()))
-        # print(self.lumlayer.allFeatureIds(), self.lumlayer.attributeList())
-        # prov = self.lumlayer.dataProvider()
-        # lst = dir(prov)
-        # for v in lst:
-        #     print(v)
-        # индексировнаие слоя luminaries
 
+         # индексировнаие слоя luminaries
         self.init_index_luminaries()
         # приязать карту на формочку
         self.layout = QVBoxLayout(self.frame)
         self.layout.addWidget(self.canvas)
 
+        self.connection = Connection(self)
         self.init_tools()
         self.init_components()
-
-
 
         self.init_luminaries()
         # что это?!
@@ -65,28 +51,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas.show()
         self.canvas.refresh()
         self.pan()
+
         self.is_connect = False
 
-
-
     # ---- Соединение и общение с сервером ----
-    def connection(self):
-        if self.is_connect:
+    def connect_(self):
+        if self.connection.is_connect:
             self.connection.close_connect()
-            self.is_connect = False
             ok_message_box("Reset connect")
             return
 
-        self.connection = Connection()
-        self.connection.connect()
-        if self.connection.sock == -1:
+        if not self.connection.connect():
             er_message_box("Connection is not set")
             return
-        self.is_connect = True
         ok_message_box("You are welcome! :)")
 
     def send_cmd(self):
-        if not self.is_connect:
+        if not self.connection.is_connect:
             er_message_box("Not connect")
             return
 
@@ -164,7 +145,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tool_zoom_in.setAction(self.mpActionZoomIn)
         self.tool_zoom_out = QgsMapToolZoom(self.canvas, True)
         self.tool_zoom_out.setAction(self.mpActionZoomOut)
-        self.tool_map_info = ToolMapInfo(self.canvas, self.ind_luminaries, self.feature_dict)
+        self.tool_map_info = ToolMapInfo(self.canvas, self.ind_luminaries, self.feature_dict, self.connection)
         self.tool_map_info.setAction(self.mpActionIndetity)
 
         self.connect(self.mpActionZoomIn, SIGNAL("triggered()"), self.zoom_in)
@@ -176,7 +157,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connect(self.mpLoadProject, SIGNAL("triggered()"), self.project_load)
         self.connect(self.mpActionIndetity, SIGNAL("triggered()"), self.point)
 
-        self.connect(self.connection_to_server_, SIGNAL("triggered()"), self.connection)
+        self.connect(self.connection_to_server_, SIGNAL("triggered()"), self.connect_)
         self.connect(self.mpSend_cmd, SIGNAL("triggered()"), self.send_cmd)
 
     def init_components(self):
@@ -216,14 +197,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.progressBar.setMaximumHeight(15)
         self.statusBar.addPermanentWidget(self.progressBar, 1)
 
+        self.msg_model = QStandardItemModel(3, 2)
+        self.msg_model.cur_msg = count()
+
+        self.msg_model.setHeaderData(0, Qt.Horizontal, u"Фонарь")
+        self.msg_model.setHeaderData(1, Qt.Horizontal, u"Сообщение")
+        colom = self.msg_model.cur_msg.next()
+        self.msg_model.setData(self.msg_model.index(colom, 0), u"A1", Qt.DisplayRole);
+        self.msg_model.setData(self.msg_model.index(colom, 1), u"включение", Qt.DisplayRole);
+
         self.listErrors.setModel(self.model)
+        self.listMessage.setModel(self.msg_model)
 
         # инициализация и загрузка
 
     def project_load(self):
         self.lumlayer = QgsVectorLayer()
         # открывает проектный файл и перебирает слои!!!
-        projectPath = QFileDialog.getOpenFileName(self, u"Открыть файл", "/home/kis/Downloads/RU-SMO",
+        projectPath = QFileDialog.getOpenFileName(self, u"Открыть файл", "/home/kis/LC/SimpleVersion/SimpleClient/map",
                                                   u"QgsProject (*.qgs);;Все файлы(*.*)")
         self.project.read(QtCore.QFileInfo(projectPath))
         point_layer, line_layer, polygom_layer = [], [], []
@@ -231,8 +222,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for k, v in QgsMapLayerRegistry.instance().mapLayers().iteritems():
             if v.name() == glb_d.get_luminaries_name():
                 self.lumlayer = v
-         #   if v.geometryType() == POINT_TYPE:
-         #       point_layer.append(QgsMapCanvasLayer(v))
+            if v.geometryType() == POINT_TYPE:
+                point_layer.append(QgsMapCanvasLayer(v))
             elif v.geometryType() == LINE_TYPE:
                 line_layer.append(QgsMapCanvasLayer(v))
             elif v.geometryType() == POLYGON_TYPE:
@@ -241,6 +232,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         point_layer.append(QgsMapCanvasLayer(self.lumlayer))
         self.layers = point_layer + line_layer + polygom_layer
+        #self.canvas.setExtent(self.lumlayer.extent())
         self.canvas.setLayerSet(self.layers)
         self.zoom_full()
 
@@ -248,10 +240,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         :return:
         """
-        project_path = QFileDialog.getOpenFileName(self, u"Открыть файл", "/home/kis/Downloads/RU-SMO/data",
+        project_path = QFileDialog.getOpenFileName(self, u"Открыть файл", "/home/kis/LC/SimpleVersion/SimpleClient/map",
                                                    u"QgsProject (*.shp);;Все файлы(*.*)")
         self.lumlayer = QgsVectorLayer()
-        # self.lumlayer = QgsVectorLayer("/home/kis/Downloads/RU-SMO/data/building-point.shp", 'luminaries', 'ogr')
+        self.lumlayer = QgsVectorLayer(project_path, 'luminaries', 'ogr')
         QgsMapLayerRegistry.instance().addMapLayer(self.lumlayer)
         self.canvas.setExtent(self.lumlayer.extent())
         self.canvas.setLayerSet([QgsMapCanvasLayer(self.lumlayer)])
@@ -280,7 +272,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         line_C = 3
         for feat in iter:
             attrs = ntuple_attrs(*feat.attributes())
-            lum = QTreeWidgetItem(["%s" % (attrs[4]), "", ""])
+            lum = QTreeWidgetItem(["%s" % (attrs.name), "", ""])
             lum.setData(0, Qt.UserRole, feat.id())
             if attrs.status == on_light:
                 lum.setIcon(1, self.icon_on)

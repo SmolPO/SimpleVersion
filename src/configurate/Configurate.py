@@ -44,7 +44,7 @@ SIZE_MAX_LEN   = 1024  # максимальный размер сообщени�
 ntuple_data_message = namedtuple("msg", ['id','cmd', 'sender', 'recv', 'size_next', 'data'])
 ntuple_main_header  = namedtuple("main_header", ['id','cmd', 'sender', 'recv', 'size_next'])
 ntuple_queue        = namedtuple("glb_queue", ['name', 'address', 'conn', 'chanl'])
-ntuple_attrs        = namedtuple("attrs", ['id', 'line', 'status', 'is_light', 'errors'])
+ntuple_attrs        = namedtuple("attrs", ['id', 'line', 'status', 'is_light', 'name'])
 
 # слайсы для распаривания
 id_slise             = slice(0, SIZE_ID)

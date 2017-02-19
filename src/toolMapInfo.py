@@ -41,10 +41,10 @@ class ToolMapInfo(QgsMapTool, QWidget):
     def __init__(self, canvas, *args):
         QgsMapTool.__init__(self, canvas)
         self.canvas = canvas
-        self.ind_luminaries, self.feature_dict = args
+        self.ind_luminaries, self.feature_dict, self.connection = args
         self.init_custom_menu()
         self.menu = QMenu()
-        self.w = 20  # ширина области, в которой курсор определяет точки на слое
+        self.w = 10  # ширина области, в которой курсор определяет точки на слое
         self.tmp_luminary = -1
 
     def init_custom_menu(self):
@@ -71,8 +71,8 @@ class ToolMapInfo(QgsMapTool, QWidget):
         if not intersect:
             print ("not point")
             return
-        # запоминаем выбранный фонарь
-        self.tmp_luminary = intersect
+        # запоминаем выбранный фонарь. intersect - list, берем первый элемент. Больше в нем и не должно быть
+        self.tmp_luminary = intersect[0]
 
         self.menu.addAction(self.on_action_)
         self.menu.addAction(self.off_action_)
@@ -87,28 +87,41 @@ class ToolMapInfo(QgsMapTool, QWidget):
         включить свет. Сначала тестим этот пункт, остальное добавим потом
         :return:
         """
+
         lum = self.get_tmp_luminary()
-        if not lum:
+        if lum == -1:
             er_message_box("No lum!((")
             return
 
-        print("on", self.tmp_luminary)
+        if Send_Handler().on_light_cmd(lum, self.connection.sock):
+            print("on", self.tmp_luminary)
+            return
+        print ("cmd ON_LIGHT is not send!")
 
     def off_action(self):
-        print('off')
+        lum = self.get_tmp_luminary()
+        if lum == -1:
+            er_message_box("No lum!((")
+            return
+
+        if Send_Handler().off_light_cmd(lum, self.connection.sock):
+            print("off", self.tmp_luminary)
+            return
+        print ("cmd OFF_LIGHT is not send!")
 
     def on_off_action(self):
-        print('on/off')
+        self.on_action()
+        self.off_action()
 
     def some_cmd(self):
         id_ = self.get_tmp_luminary()
-        er_message_box("luminaries id is: " + id_[0])
-        cmd, ok = QInputDialog.getText(self, 'Input cmd for ' + id_[0], 'Entry command:')
+        er_message_box("luminaries id is: ")
+        cmd, ok = QInputDialog.getText(self, 'Input cmd for ', 'Entry command:')
         if not ok or not cmd.isdigit():
             er_message_box("Cansel or uncorrect data")
             return
 
-        data, ok = QInputDialog.getText(self, 'Input data for' + id_[0], 'Entry data:')
+        data, ok = QInputDialog.getText(self, 'Input data for', 'Entry data:')
         if not ok or not cmd.isdigit():
             er_message_box("Cansel or uncorrect data")
             return

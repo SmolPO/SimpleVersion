@@ -15,12 +15,13 @@ class Recv_Handler(Thread):
     sock       = None
     connection = None
 
-    def __init__(self, socket, connection=None):
+    def __init__(self, socket, wnd):
 
         Thread.__init__(self)
         print("recv handler init begin")
         self.sock    = socket
-        self.connection = connection
+       # self.connection = connection
+        self.wnd = wnd
         self.packet = cnf.init_ntuple_data_message()
         print("recv handler init ok")
         pass
@@ -73,16 +74,33 @@ class Recv_Handler(Thread):
 
     def analise_packet(self, packet):
         print(packet)
+        colom = self.wnd.msg_model.cur_msg.next()
+        id_ = 0
+        msg = 1
         if packet == cnf.init_ntuple_data_message():
-            er_message_box("empty packet...")
+            print("empty packet...")
             return False
         if packet.cmd == CMD.OFF_LIGHT:
-            er_message_box("OFF LIGHT")
+            self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, id_), str(packet.recv), Qt.DisplayRole);
+            self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, msg), "off", Qt.DisplayRole);
+            print("OFF LIGHT")
         elif packet.cmd == CMD.ON_LIGHT:
-            er_message_box("ON LIGHT")
+            self.get_luminary_from_id(packet.recv)
+            self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, id_), str(packet.recv), Qt.DisplayRole);
+            self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, msg), "on", Qt.DisplayRole);
+            print("ON LIGHT")
         elif packet.cmd:
-            er_message_box("SOME CMD")
+            print("SOME CMD")
         return True
+
+    def get_luminary_from_id(self, id):
+        iter = self.wnd.lumlayer.getFeatures()
+        for feat in iter:
+            attrs = cnf.ntuple_attrs(*feat.attributes())
+            if attrs.id == id:
+
+                for i in dir(feat.setGeometry):
+                    print(i)
 
     # преорабразование сообщения
     def parse_message(self, mess):

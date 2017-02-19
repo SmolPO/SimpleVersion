@@ -2,30 +2,36 @@
 
 import socket
 
+import Configurate as cnf
+
+from message_box import *
+from RecvHandler import Recv_Handler
 from DataBase import Data_Base as DB
 from globals_variables import global_data as glb_d
 
-import Configurate as cnf
-from message_box import *
-from RecvHandler import Recv_Handler
-
 class Connection:
-    recv_handler = None
-    sock = None
+
+    def __init__(self, wnd):
+        self.recv_handler = None
+        self.sock = None
+        self.is_connect = False
+        self.wnd = wnd
 
     def connect(self):
         print("connection start")
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            self.sock.connect((cnf.server_address, cnf.PORT))
-            cnf.sock = self.sock # почему не работает?!!!!
+            if self.sock.connect((cnf.server_address, cnf.PORT)):
+                print ("true")
+                cnf.sock = self.sock # почему не работает?!!!!
         except:
             return False
 
         if not self.authentication(self.sock):
             er_message_box("It is bad server!...")
             return False
-        self.recv_handler = Recv_Handler(self.sock)
+        self.is_connect = True
+        self.recv_handler = Recv_Handler(self.sock, self.wnd)
         self.recv_handler.start()
         return True
 
@@ -55,8 +61,9 @@ class Connection:
         except:
             return None
 
-    def close_connect(self, sock):
+    def close_connect(self):
         if not self.sock:
             return
         self.sock.close()
+        self.is_connect = False
 
