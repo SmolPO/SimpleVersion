@@ -1,16 +1,14 @@
 # coding=utf-8
-import sys
-import time
-from qgis.core import *
+
+from SendHandler import Send_Handler
+from MsgBox import *
 from qgis.gui import *
+
+from qgis.core import *
 
 from PyQt4.Qt import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-
-from SendHandler import Send_Handler
-from message_box import *
-
 # class InfoMapTool(QgsMapToolPan):
 #     _mDragging = False
 #
@@ -87,6 +85,9 @@ class ToolMapInfo(QgsMapTool, QWidget):
         включить свет. Сначала тестим этот пункт, остальное добавим потом
         :return:
         """
+        if not self.connection.is_connect:
+            er_message_box("Is not connect")
+            return
 
         lum = self.get_tmp_luminary()
         if lum == -1:
@@ -99,6 +100,10 @@ class ToolMapInfo(QgsMapTool, QWidget):
         print ("cmd ON_LIGHT is not send!")
 
     def off_action(self):
+        if not self.connection.is_connect:
+            er_message_box("Is not connect")
+            return
+
         lum = self.get_tmp_luminary()
         if lum == -1:
             er_message_box("No lum!((")
@@ -110,10 +115,18 @@ class ToolMapInfo(QgsMapTool, QWidget):
         print ("cmd OFF_LIGHT is not send!")
 
     def on_off_action(self):
+        if not self.connection.is_connect:
+            er_message_box("Is not connect")
+            return
+
         self.on_action()
         self.off_action()
 
     def some_cmd(self):
+        if not self.connection.is_connect:
+            er_message_box("Is not connect")
+            return
+
         id_ = self.get_tmp_luminary()
         er_message_box("luminaries id is: ")
         cmd, ok = QInputDialog.getText(self, 'Input cmd for ', 'Entry command:')

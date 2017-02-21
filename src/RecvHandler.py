@@ -2,11 +2,13 @@
 
 from threading import Thread
 
-import Configurate as cnf
-from DataBase import Data_Base as DB
 import Commands as CMD
-import _test_
-from message_box import *
+import Configurate as cnf
+#import _test_
+from DataBase import Data_Base as DB
+from MsgBox import *
+
+
 class Recv_Handler(Thread):
     """
 
@@ -81,10 +83,12 @@ class Recv_Handler(Thread):
             print("empty packet...")
             return False
         if packet.cmd == CMD.OFF_LIGHT:
+           # off_light(self.wnd)
             self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, id_), str(packet.recv), Qt.DisplayRole);
             self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, msg), "off", Qt.DisplayRole);
             print("OFF LIGHT")
         elif packet.cmd == CMD.ON_LIGHT:
+          #  on_light(self.wnd)
             self.get_luminary_from_id(packet.recv)
             self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, id_), str(packet.recv), Qt.DisplayRole);
             self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, msg), "on", Qt.DisplayRole);

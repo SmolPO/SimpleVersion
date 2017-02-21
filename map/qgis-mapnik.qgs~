@@ -37,10 +37,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>3570668.33935011550784111</xmin>
-      <ymin>7318977.32648453395813704</ymin>
-      <xmax>3572315.08281758055090904</xmax>
-      <ymax>7319613.0460556847974658</ymax>
+      <xmin>3570959.82920225476846099</xmin>
+      <ymin>7318986.61699775047600269</ymin>
+      <xmax>3572606.57266971981152892</xmax>
+      <ymax>7319622.33656890131533146</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -2247,11 +2247,11 @@ def my_form_open(dialog, layer, feature):
       <attributeactions default="-1">
         <actionsetting showInAttributeTable="1" action="echo &quot;[% &quot;MY_FIELD&quot; %]&quot;" icon="" capture="1" type="0" name="Echo attribute's value" shortTitle=""/>
         <actionsetting showInAttributeTable="1" action="ogr2ogr -f &quot;ESRI Shapefile&quot; &quot;[% &quot;OUTPUT_PATH&quot; %]&quot; &quot;[% &quot;INPUT_FILE&quot; %]&quot;" icon="" capture="1" type="0" name="Run an application" shortTitle=""/>
-        <actionsetting showInAttributeTable="1" action="QtGui.QMessageBox.information(None, &quot;Feature id&quot;, &quot;feature id is [% $id %]&quot;)" icon="" capture="1" type="1" name="Get feature id" shortTitle=""/>
-        <actionsetting showInAttributeTable="1" action="QtGui.QMessageBox.information(None, &quot;Current field's value&quot;, &quot;[% @current_field %]&quot;)" icon="" capture="1" type="1" name="Selected field's value (Identify features tool)" shortTitle=""/>
-        <actionsetting showInAttributeTable="1" action="QtGui.QMessageBox.information(None, &quot;Clicked coords&quot;, &quot;layer: [% @layer_id %]\ncoords: ([% @click_x %],[% @click_y %])&quot;)" icon="" capture="1" type="1" name="Clicked coordinates (Run feature actions tool)" shortTitle=""/>
-        <actionsetting showInAttributeTable="1" action="[% &quot;PATH&quot; %]" icon="" capture="1" type="5" name="Open file" shortTitle=""/>
-        <actionsetting showInAttributeTable="1" action="http://www.google.com/search?q=[% &quot;ATTRIBUTE&quot; %]" icon="" capture="1" type="5" name="Search on web based on attribute's value" shortTitle=""/>
+        <actionsetting showInAttributeTable="1" action="QtGui.QMessageBox.information(None, &quot;Feature id&quot;, &quot;feature id is [% $id %]&quot;)" icon="" capture="0" type="1" name="Get feature id" shortTitle=""/>
+        <actionsetting showInAttributeTable="1" action="QtGui.QMessageBox.information(None, &quot;Current field's value&quot;, &quot;[% @current_field %]&quot;)" icon="" capture="0" type="1" name="Selected field's value (Identify features tool)" shortTitle=""/>
+        <actionsetting showInAttributeTable="1" action="QtGui.QMessageBox.information(None, &quot;Clicked coords&quot;, &quot;layer: [% @layer_id %]\ncoords: ([% @click_x %],[% @click_y %])&quot;)" icon="" capture="0" type="1" name="Clicked coordinates (Run feature actions tool)" shortTitle=""/>
+        <actionsetting showInAttributeTable="1" action="[% &quot;PATH&quot; %]" icon="" capture="0" type="5" name="Open file" shortTitle=""/>
+        <actionsetting showInAttributeTable="1" action="http://www.google.com/search?q=[% &quot;ATTRIBUTE&quot; %]" icon="" capture="0" type="5" name="Search on web based on attribute's value" shortTitle=""/>
       </attributeactions>
       <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="384">
         <columns>

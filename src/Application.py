@@ -1,16 +1,13 @@
 # coding=utf-8
 
 
+import sys
 from threading import Thread
-from qgis.core import *
-from qgis.gui import *
 
 from PyQt4.Qt import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-import sys
 
-import mainWindow
+import MainWindow
+
 
 class Application(Thread):
     """
@@ -29,7 +26,7 @@ class Application(Thread):
         QgsApplication.setPrefixPath("/usr", True)
         QgsApplication.initQgis()
 
-        self.inerface = mainWindow.MainWindow()
+        self.inerface = MainWindow.MainWindow()
         self.inerface.show()
 
         retval = app.exec_()

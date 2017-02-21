@@ -1,22 +1,24 @@
 # coding=utf-8
+
 import sys
-import time
-from qgis.core import *
+
 from qgis.gui import *
+
+from qgis.core import *
 
 from PyQt4.Qt import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+from MainWindow_ui import Ui_MainWindow
 
-from mainwindow_ui import Ui_MainWindow
-from _test_ import *
 from SendHandler import Send_Handler
-from message_box import *
+from MsgBox import *
 from Configurate import ntuple_attrs
-from globals_variables import global_data as glb_d
-from toolMapInfo import ToolMapInfo
+from GlobalsVariables import global_data as glb_d
+from ToolMapInfo import ToolMapInfo
 from itertools import count
+from Connection import Connection
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -56,41 +58,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # ---- Соединение и общение с сервером ----
     def connect_(self):
-        if self.connection.is_connect:
-            self.connection.close_connect()
-            ok_message_box("Reset connect")
-            return
-
-        if not self.connection.connect():
-            er_message_box("Connection is not set")
-            return
-        ok_message_box("You are welcome! :)")
+       self.connection.connect()
 
     def send_cmd(self):
-        if not self.connection.is_connect:
-            er_message_box("Not connect")
-            return
-
-        cmd, ok = QInputDialog.getText(self, 'Input cmd', 'Entry command:')
-        if not ok or not cmd.isdigit():
-            er_message_box("Cansel or uncorrect data")
-            return
-
-        sender, ok = QInputDialog.getText(self, 'Input id luminaries', 'Entry id:')
-        if not ok or not cmd.isdigit():
-            er_message_box("Cansel or uncorrect data")
-            return
-
-        data, ok = QInputDialog.getText(self, 'Input data', 'Entry data:')
-        if not ok or not cmd.isdigit():
-            er_message_box("Cansel or uncorrect data")
-            return
-
-        if not Send_Handler().send_message(cmd=cmd, receiver=sender, data=data, sock=self.sock):
-            er_message_box("Cansel or uncorrect data")
-            return
-
-        return
+        Send_Handler().send_some_cmd(self.connection)
 
     ### ---- сообщение об ошибки соединения с сервером ----
     def closeEvent(self, event):
@@ -220,6 +191,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         point_layer, line_layer, polygom_layer = [], [], []
         POINT_TYPE, LINE_TYPE, POLYGON_TYPE = 0, 1, 2
         for k, v in QgsMapLayerRegistry.instance().mapLayers().iteritems():
+
             if v.name() == glb_d.get_luminaries_name():
                 self.lumlayer = v
             if v.geometryType() == POINT_TYPE:
@@ -232,7 +204,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         point_layer.append(QgsMapCanvasLayer(self.lumlayer))
         self.layers = point_layer + line_layer + polygom_layer
-        #self.canvas.setExtent(self.lumlayer.extent())
+      #  self.canvas.setExtent(self.lumlayer.extent())
         self.canvas.setLayerSet(self.layers)
         self.zoom_full()
 

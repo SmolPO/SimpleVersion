@@ -234,4 +234,4 @@ class Ui_MainWindow(object):
         self.mpLoadLayer.setText(QtGui.QApplication.translate("MainWindow", "загрузить слой", None, QtGui.QApplication.UnicodeUTF8))
         self.mpLoadProject.setText(QtGui.QApplication.translate("MainWindow", "открыть проект", None, QtGui.QApplication.UnicodeUTF8))
 
-import resources_rc
+import ResourcesRc

@@ -17,8 +17,7 @@
 
 """
 
-from collections import namedtuple, deque
-from DataBase import Data_Base as DB
+from collections import namedtuple
 
 # глобальные переменные
 list_handlers = []

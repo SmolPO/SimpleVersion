@@ -4,10 +4,10 @@ import socket
 
 import Configurate as cnf
 
-from message_box import *
+from MsgBox import *
 from RecvHandler import Recv_Handler
 from DataBase import Data_Base as DB
-from globals_variables import global_data as glb_d
+from GlobalsVariables import global_data as glb_d
 
 class Connection:
 
@@ -18,12 +18,17 @@ class Connection:
         self.wnd = wnd
 
     def connect(self):
-        print("connection start")
+        if self.is_connect:
+            self.close_connect()
+            ok_message_box("Reset connect")
+            return
+
+        print("connection start....")
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            if self.sock.connect((cnf.server_address, cnf.PORT)):
-                print ("true")
-                cnf.sock = self.sock # почему не работает?!!!!
+            if not self.sock.connect((cnf.server_address, cnf.PORT)):
+                er_message_box("Not connect")
+                return False
         except:
             return False
 
@@ -33,6 +38,7 @@ class Connection:
         self.is_connect = True
         self.recv_handler = Recv_Handler(self.sock, self.wnd)
         self.recv_handler.start()
+        ok_message_box("You are wellcome!")
         return True
 
     def authentication(self, sock=cnf.sock):
