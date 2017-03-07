@@ -9,6 +9,7 @@ from Commands import *
 from GlobalsVariables import global_data as glb_d
 from MsgBox import *
 
+
 class Send_Handler:
     cur_id = count()
 
@@ -58,23 +59,23 @@ class Send_Handler:
             er_message_box("Not connect")
             return
 
-        cmd, ok = QInputDialog.getText(self, 'Input cmd', 'Entry command:')
-        if not ok or not cmd.isdigit():
-            er_message_box("Cansel or uncorrect data")
-            return
-
-        sender, ok = QInputDialog.getText(self, 'Input id luminaries', 'Entry id:')
-        if not ok or not cmd.isdigit():
-            er_message_box("Cansel or uncorrect data")
-            return
-
-        data, ok = QInputDialog.getText(self, 'Input data', 'Entry data:')
-        if not ok or not cmd.isdigit():
-            er_message_box("Cansel or uncorrect data")
-            return
-
-        if not Send_Handler().send_message(cmd=cmd, receiver=sender, data=data, sock=self.sock):
-            er_message_box("Cansel or uncorrect data")
-            return
+        ok = QInputDialog.getText('Input cmd', 'Entry command:')
+        # if not ok or not cmd.isdigit():
+        #     er_message_box("Cansel or uncorrect data")
+        #     return
+        #
+        # sender, ok = QInputDialog.getText('Input id luminaries', 'Entry id:')
+        # if not ok or not cmd.isdigit():
+        #     er_message_box("Cansel or uncorrect data")
+        #     return
+        #
+        # data, ok = QInputDialog.getText(self, 'Input data', 'Entry data:')
+        # if not ok or not cmd.isdigit():
+        #     er_message_box("Cansel or uncorrect data")
+        #     return
+        #
+        # if not Send_Handler().send_message(cmd=cmd, receiver=sender, data=data, sock=self.sock):
+        #     er_message_box("Cansel or uncorrect data")
+        #     return
 
         return

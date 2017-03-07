@@ -9,7 +9,7 @@ from RecvHandler import Recv_Handler
 from DataBase import Data_Base as DB
 from GlobalsVariables import global_data as glb_d
 
-class Connection:
+class Connection_:
 
     def __init__(self, wnd):
         self.recv_handler = None
@@ -26,10 +26,11 @@ class Connection:
         print("connection start....")
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            if not self.sock.connect((cnf.server_address, cnf.PORT)):
+            if self.sock.connect((cnf.server_address, cnf.PORT)) == -1:
                 er_message_box("Not connect")
                 return False
         except:
+            er_message_box("Not connect")
             return False
 
         if not self.authentication(self.sock):
@@ -41,7 +42,7 @@ class Connection:
         ok_message_box("You are wellcome!")
         return True
 
-    def authentication(self, sock=cnf.sock):
+    def authentication(self, sock=None):
 
         try:
             if not sock.send(cnf.MY_TYPE):

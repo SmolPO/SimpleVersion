@@ -20,7 +20,6 @@
 from collections import namedtuple
 
 # глобальные переменные
-list_handlers = []
 MY_TYPE = 'Cl'
 
 # размеры полей в байтах
@@ -67,26 +66,13 @@ PORT = 27000
 server_address = 'localhost'
 MAX_CONNECT = 10
 BUFFER_SIZE = 30
-sock = -1
 
 # кодировка сообщений
 TYPE_CODING = dict(utf_8='utf-8', ackii='ackii')
 
 # для очереди
-queue_name = "Global_Queue"
-queue_addr = 'localhost'
-queue_conn = None
-queue_chanl = None
-
-log_queue_name = "Log Queue"
-log_queue_addr = 'localhost'
-log_queue_conn = None
-log_queue_chanl = None
-
-key_recv   = "key_recv"
-key_send   = "key_send"
-password   = b"6EQUJ511_1"
-
+STATUS_LUMINARY = dict(off='OFF', on='ON', disconnet='DISCONNECT')
+COLOR_STATUS = dict(off='red', on='yellow', disconnet='gray')
 
 def to_bytes_from_data_message(data, size_field=4, end_symbol ='0', charset="utf-8", more=False):
     """

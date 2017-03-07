@@ -1,7 +1,9 @@
 # coding=utf-8
 from threading import Thread
 # TODO добавить базу данных
+import psycopg2
 
+# пока не используется
 class Data_Base:
     """
     интерфейс БД на серваке

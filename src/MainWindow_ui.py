@@ -48,6 +48,7 @@ class Ui_MainWindow(object):
         self.treeWidget.setColumnCount(3)
         self.treeWidget.setObjectName("treeWidget")
         self.treeWidget.header().setDefaultSectionSize(100)
+
         self.verticalLayout.addWidget(self.treeWidget)
         self.dockListWidget.setWidget(self.dockWidgetListContent)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockListWidget)

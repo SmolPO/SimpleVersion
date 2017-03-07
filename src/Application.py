@@ -8,7 +8,6 @@ from PyQt4.Qt import *
 
 import MainWindow
 
-
 class Application(Thread):
     """
     читает конфиг
@@ -26,7 +25,7 @@ class Application(Thread):
         QgsApplication.setPrefixPath("/usr", True)
         QgsApplication.initQgis()
 
-        self.inerface = MainWindow.MainWindow()
+        self.inerface = MainWindow()
         self.inerface.show()
 
         retval = app.exec_()
@@ -37,7 +36,5 @@ class Application(Thread):
         print("Client starting...")
         self.inerface.join()
         print("Application end...")
-
-
 
 

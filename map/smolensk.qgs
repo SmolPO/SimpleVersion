@@ -46,10 +46,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>3561754.76998644461855292</xmin>
-      <ymin>7307065.57873340975493193</ymin>
-      <xmax>3594396.72663670172914863</xmax>
-      <ymax>7339508.84766008984297514</ymax>
+      <xmin>3571330.82563200080767274</xmin>
+      <ymin>7318858.35934312548488379</ymin>
+      <xmax>3572429.93115562340244651</xmax>
+      <ymax>7320138.89387087617069483</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -326,7 +326,7 @@
         </spatialrefsys>
       </srs>
       <provider encoding="System">ogr</provider>
-      <previewExpression></previewExpression>
+      <previewExpression>COALESCE( "id", '&lt;NULL>' )</previewExpression>
       <vectorjoins/>
       <layerDependencies/>
       <expressionfields/>
@@ -397,7 +397,10 @@
       <excludeAttributesWFS/>
       <attributeactions default="-1"/>
       <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="-1123776416">
-        <columns/>
+        <columns>
+          <column width="-1" hidden="0" type="field" name="id"/>
+          <column width="-1" hidden="1" type="actions"/>
+        </columns>
       </attributetableconfig>
       <editform>.</editform>
       <editforminit/>

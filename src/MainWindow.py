@@ -1,25 +1,24 @@
 # coding=utf-8
+from qgis.gui import *
+from qgis.core import *
+from PyQt4.Qt import *
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 
 import sys
-
-from qgis.gui import *
-
-from qgis.core import *
-
-from PyQt4.Qt import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-
-from MainWindow_ui import Ui_MainWindow
-
-from SendHandler import Send_Handler
-from MsgBox import *
-from Configurate import ntuple_attrs
-from GlobalsVariables import global_data as glb_d
-from ToolMapInfo import ToolMapInfo
 from itertools import count
-from Connection import Connection
 
+from threading import Thread
+
+#from qgis._core.QgsMarkerSymbolV2 import QgsMarkerSymbolV2
+
+from Configurate import ntuple_attrs
+from Connection_ import Connection_
+from GlobalsVariables import global_data as glb_d
+from MainWindow_ui import Ui_MainWindow
+from MsgBox import *
+from SendHandler import Send_Handler
+from ToolMapInfo import ToolMapInfo
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -42,21 +41,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.layout = QVBoxLayout(self.frame)
         self.layout.addWidget(self.canvas)
 
-        self.connection = Connection(self)
+        self.connection = Connection_(self)
+        exp = QgsExpression("num_line ILIKE \'%1\'")
+        request = QgsFeatureRequest(exp);
+        request.setSubsetOfAttributes([99, 99, 99, 99, "AA"])
+      #  features = self.lumlayer.setSelectedFeatures([1, 2])
         self.init_tools()
         self.init_components()
-
+    #    self.modify_attributs(self.lumlayer, 4, 4,'TT')
+    #    self.add_point(self.lumlayer, QgsPoint(123, 456), [88, 89, 90, 91, 'T88'])
+    #    self.delete_feature_from_id(self.lumlayer, 4)
         self.init_luminaries()
-        # что это?!
-        self.connect(self.treeWidget, SIGNAL("itemDoubleClicked(QTreeWidgetItem*, int)"), self.treeItemDoubleClicked)
-
         self.canvas.show()
         self.canvas.refresh()
         self.pan()
-
         self.is_connect = False
 
-    # ---- Соединение и общение с сервером ----
+
+      # ---- Соединение и общение с сервером ----
     def connect_(self):
        self.connection.connect()
 
@@ -71,16 +73,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         QMainWindow.closeEvent(self, event)
 
     def treeItemDoubleClicked(self, item, column):
-        print("//////")
         if item.childCount() > 0: return
-        # äîáàâëåíèå ñïèñêà óçëîâ
-        provider = self.lumlayer.dataProvider()
-        feat = QgsFeature()
-        if provider.featureAtId(item.data(0, Qt.UserRole).toInt()[0], feat):
-            rect = QgsRectangle()
-            rect.scale(self.canvas.scale(), feat.geometry().asPoint())
-            self.canvas.setExtent(rect)
-            self.canvas.refresh()
+        name_luminaries = item.data(0, 0) # получить текст из первого поля в строке в дереве фонарей
+        iter = self.lumlayer.getFeatures()
+        for feat in iter:
+            attrs = ntuple_attrs(*feat.attributes())
+            if attrs.name == name_luminaries:
+                # перевод карты к фонарю
+                rect = QgsRectangle()
+                rect.scale(self.canvas.scale(), feat.geometry().asPoint())
+                self.canvas.setExtent(rect)
+                self.canvas.refresh()
 
     # ---- инструменты карты ----
     def zoom_in(self):
@@ -116,7 +119,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tool_zoom_in.setAction(self.mpActionZoomIn)
         self.tool_zoom_out = QgsMapToolZoom(self.canvas, True)
         self.tool_zoom_out.setAction(self.mpActionZoomOut)
-        self.tool_map_info = ToolMapInfo(self.canvas, self.ind_luminaries, self.feature_dict, self.connection)
+        self.tool_map_info = ToolMapInfo(self.canvas, self.ind_luminaries, self.feature_dict, self.connection, self.lumlayer)
         self.tool_map_info.setAction(self.mpActionIndetity)
 
         self.connect(self.mpActionZoomIn, SIGNAL("triggered()"), self.zoom_in)
@@ -130,15 +133,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.connect(self.connection_to_server_, SIGNAL("triggered()"), self.connect_)
         self.connect(self.mpSend_cmd, SIGNAL("triggered()"), self.send_cmd)
+        # дерево элементов
+        self.connect(self.treeWidget, SIGNAL("itemDoubleClicked(QTreeWidgetItem*, int)"), self.treeItemDoubleClicked)
 
     def init_components(self):
         self.topA = QTreeWidgetItem(["LINE_A", "", ""], 0)
         self.topB = QTreeWidgetItem(["LINE_B", "", ""], 0)
         self.topC = QTreeWidgetItem(["LINE_C", "", ""], 0)
+        self.topD = QTreeWidgetItem(["LINE_D", "", ""], 0)
 
         self.treeWidget.addTopLevelItem(self.topA)
         self.treeWidget.addTopLevelItem(self.topB)
         self.treeWidget.addTopLevelItem(self.topC)
+        self.treeWidget.addTopLevelItem(self.topD)
         self.treeWidget.sortItems(0, Qt.AscendingOrder)
 
         self.model = QStandardItemModel(3, 4)
@@ -271,6 +278,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.topB.addChild(lum)
             elif attrs.line == line_C:
                 self.topC.addChild(lum)
+            else:
+                self.topD.addChild(lum)
+
+
+
 
 def main(app):
 
@@ -292,8 +304,19 @@ if __name__ == "__main__":
     main(app)
 
 
+# def main():
+#     app_ = Application()
+#     app_.start()
+#     print("Application start....")
+#     app_.join()
+#     print("Exit")
 
-# def add_poligon_or_line(self):
+
+if __name__ == '__main__':
+    main()
+
+
+        # def add_poligon_or_line(self):
 #     r = QgsRubberBand(self.canvas, False)  # False = not a polygon
 #     points = [QgsPoint(0, 0), QgsPoint(50, 50), QgsPoint(60, -60)]
 #     r.setToGeometry(QgsGeometry.fromPolyline(points), None)
@@ -357,3 +380,7 @@ if __name__ == "__main__":
         #         topB.addChild(lum)
         #     elif attrs[2] == 3:
         #         topC.addChild(lum)
+
+#  provider = self.lumlayer.dataProvider()
+#   feat = QgsFeature()
+# if provider.featureAtId(item.data(0, Qt.UserRole).toInt()[0], feat):

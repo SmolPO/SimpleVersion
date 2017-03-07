@@ -8,19 +8,19 @@
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="lum_point20170221064705430" name="lum_point">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="boundary_polygon20120225230727380" name="Административные границы">
+    <layer-tree-layer expanded="0" checked="Qt::Checked" id="boundary_polygon20120225230727380" name="Административные границы">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="0" checked="Qt::Checked" id="building_polygon20120225230727544" name="Здания">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="highway_line20120225230727560" name="Автодороги">
+    <layer-tree-layer expanded="0" checked="Qt::Checked" id="highway_line20120225230727560" name="Автодороги">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="railway_line20120225230727646" name="Железные дороги">
+    <layer-tree-layer expanded="0" checked="Qt::Checked" id="railway_line20120225230727646" name="Железные дороги">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="water_line20120225230727741" name="Гидросеть">
+    <layer-tree-layer expanded="0" checked="Qt::Checked" id="water_line20120225230727741" name="Гидросеть">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="0" checked="Qt::Checked" id="water_polygon20120225230727758" name="Озёра, крупные реки">
@@ -37,10 +37,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>3570668.33935011550784111</xmin>
-      <ymin>7318977.32648453395813704</ymin>
-      <xmax>3572315.08281758055090904</xmax>
-      <ymax>7319613.0460556847974658</ymax>
+      <xmin>3569681.22232095804065466</xmin>
+      <ymin>7318961.40837846603244543</ymin>
+      <xmax>3572974.70925588812679052</xmax>
+      <ymax>7320232.84752076771110296</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -97,8 +97,8 @@
         <legendlayerfile isInOverview="0" layerid="lum_point20170221064705430" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Административные границы" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
+    <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Административные границы" showFeatureCount="0">
+      <filegroup open="false" hidden="false">
         <legendlayerfile isInOverview="0" layerid="boundary_polygon20120225230727380" visible="1"/>
       </filegroup>
     </legendlayer>
@@ -107,18 +107,18 @@
         <legendlayerfile isInOverview="0" layerid="building_polygon20120225230727544" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Автодороги" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
+    <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Автодороги" showFeatureCount="0">
+      <filegroup open="false" hidden="false">
         <legendlayerfile isInOverview="0" layerid="highway_line20120225230727560" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Железные дороги" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
+    <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Железные дороги" showFeatureCount="0">
+      <filegroup open="false" hidden="false">
         <legendlayerfile isInOverview="0" layerid="railway_line20120225230727646" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Гидросеть" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
+    <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Гидросеть" showFeatureCount="0">
+      <filegroup open="false" hidden="false">
         <legendlayerfile isInOverview="0" layerid="water_line20120225230727741" visible="1"/>
       </filegroup>
     </legendlayer>
@@ -1959,6 +1959,12 @@ def my_form_open(dialog, layer, feature):
       </conditionalstyles>
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <extent>
+        <xmin>32.08204573486003852</xmin>
+        <ymin>54.77794687010280938</ymin>
+        <xmax>32.09144900429551939</xmax>
+        <ymax>54.78426490544899252</ymax>
+      </extent>
       <id>lum_point20170221064705430</id>
       <datasource>./data/lum_point.shp</datasource>
       <keywordList>

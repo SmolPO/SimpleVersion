@@ -34,10 +34,10 @@
   <mapcanvas>
     <units>degrees</units>
     <extent>
-      <xmin>32.07666186077507575</xmin>
-      <ymin>54.76949611916666782</ymin>
-      <xmax>32.09642957277584685</xmax>
-      <ymax>54.78789319541670721</ymax>
+      <xmin>32.06197432375384437</xmin>
+      <ymin>54.76809443716665982</ymin>
+      <xmax>32.10150974775538657</xmax>
+      <ymax>54.8048885896667386</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>0</projections>
@@ -1490,7 +1490,7 @@ def my_form_open(dialog, layer, feature):
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="11,12,17,255"/>
+              <prop k="line_color" v="100,116,64,255"/>
               <prop k="line_style" v="solid"/>
               <prop k="line_width" v="0.52"/>
               <prop k="line_width_unit" v="MM"/>

@@ -7,8 +7,8 @@ import Configurate as cnf
 #import _test_
 from DataBase import Data_Base as DB
 from MsgBox import *
-
-
+from MyQgisIface import Qgis_iface
+from Handlers import handlers_commands
 class Recv_Handler(Thread):
     """
 
@@ -20,12 +20,11 @@ class Recv_Handler(Thread):
     def __init__(self, socket, wnd):
 
         Thread.__init__(self)
-        print("recv handler init begin")
         self.sock    = socket
        # self.connection = connection
         self.wnd = wnd
         self.packet = cnf.init_ntuple_data_message()
-        print("recv handler init ok")
+        self.handler_command = handlers_commands(wnd.luminary, wnd)
         pass
 
     def run(self):
@@ -82,16 +81,15 @@ class Recv_Handler(Thread):
         if packet == cnf.init_ntuple_data_message():
             print("empty packet...")
             return False
+        feature_id = self.get_feature_id(packet)
         if packet.cmd == CMD.OFF_LIGHT:
-           # off_light(self.wnd)
+            self.handler_command.on_light(feature_id)
             self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, id_), str(packet.recv), Qt.DisplayRole);
             self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, msg), "off", Qt.DisplayRole);
+
             print("OFF LIGHT")
         elif packet.cmd == CMD.ON_LIGHT:
-          #  on_light(self.wnd)
-            self.get_luminary_from_id(packet.recv)
-            self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, id_), str(packet.recv), Qt.DisplayRole);
-            self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, msg), "on", Qt.DisplayRole);
+            self.handler_command.off_light(feature_id)
             print("ON LIGHT")
         elif packet.cmd:
             print("SOME CMD")
@@ -102,9 +100,16 @@ class Recv_Handler(Thread):
         for feat in iter:
             attrs = cnf.ntuple_attrs(*feat.attributes())
             if attrs.id == id:
+                return feat
+        return None
 
-                for i in dir(feat.setGeometry):
-                    print(i)
+    def get_feature_id(self, packet):
+        """
+        возвращает id отправителя.
+        :param packet:
+        :return:
+        """
+        return packet.sener
 
     # преорабразование сообщения
     def parse_message(self, mess):
@@ -193,8 +198,6 @@ class Recv_Handler(Thread):
         er_message_box("reset connect... (((")
         DB().mess_to_log("reset connect...")
         self.sock.close()
-
-        _test_.is_connect = False
 
 
 

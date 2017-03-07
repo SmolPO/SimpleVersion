@@ -3,15 +3,15 @@
   <title>osm_shp</title>
   <autotransaction active="0"/>
   <evaluateDefaultValues active="0"/>
-  <layer-tree-group expanded="1" checked="Qt::Checked" name="">
+  <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="Clipped20170217001956119" name="Clipped">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="lum_point20170216152552527" name="lum_point">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="board_city20170217001756317" name="board_city">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="lum_point20170216152552527" name="lum_point">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="Clipped20170217001956119" name="Clipped">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="0" checked="Qt::Checked" id="highway_line20111013132720160" name="highways_line">
@@ -38,7 +38,7 @@
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="water_polygon20111013132720129" name="water-polygon">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="settlement_polygon20111013132720139" name="settlement-polygon">
+    <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="settlement_polygon20111013132720139" name="settlement-polygon">
       <customproperties/>
     </layer-tree-layer>
   </layer-tree-group>
@@ -46,10 +46,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>3563701.3777403561398387</xmin>
-      <ymin>7311095.88099157251417637</ymin>
-      <xmax>3581287.06611831765621901</xmax>
-      <ymax>7331584.43343558348715305</ymax>
+      <xmin>3570145.62779317190870643</xmin>
+      <ymin>7317558.14388231560587883</ymin>
+      <xmax>3574225.87237445404753089</xmax>
+      <ymax>7321613.55249815061688423</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -82,8 +82,8 @@
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="water_line20111013132720110"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="poi_point20111013132720232"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vegetation_polygon20111013132720149"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="water_polygon20111013132720129"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="board_city20170217001756317"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="water_polygon20111013132720129"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="building_polygon20111013132720092"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="railway_line20111013132720220"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="settlement_point20111013133203835"/>
@@ -108,9 +108,9 @@
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Clipped" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="lum_point" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="Clipped20170217001956119" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="lum_point20170216152552527" visible="1"/>
       </filegroup>
     </legendlayer>
     <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="board_city" showFeatureCount="0">
@@ -118,9 +118,9 @@
         <legendlayerfile isInOverview="0" layerid="board_city20170217001756317" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="lum_point" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Clipped" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="lum_point20170216152552527" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="Clipped20170217001956119" visible="1"/>
       </filegroup>
     </legendlayer>
     <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="highways_line" showFeatureCount="0">
@@ -163,9 +163,9 @@
         <legendlayerfile isInOverview="0" layerid="water_polygon20111013132720129" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="settlement-polygon" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="settlement-polygon" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="settlement_polygon20111013132720139" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="settlement_polygon20111013132720139" visible="0"/>
       </filegroup>
     </legendlayer>
   </legend>
@@ -277,7 +277,7 @@
         <multilineenabled fieldname="" on=""/>
         <selectedonly on=""/>
       </labelattributes>
-      <annotationform></annotationform>
+      <annotationform>.</annotationform>
       <aliases>
         <alias field="OSM_ID" index="0" name=""/>
         <alias field="BUILDING" index="1" name=""/>
@@ -293,10 +293,10 @@
       <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="-244017600">
         <columns/>
       </attributetableconfig>
-      <editform></editform>
+      <editform>.</editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath></editforminitfilepath>
+      <editforminitfilepath>.</editforminitfilepath>
       <editforminitcode><![CDATA[]]></editforminitcode>
       <featformsuppress>0</featformsuppress>
       <editorlayout>generatedlayout</editorlayout>
@@ -326,7 +326,7 @@
         </spatialrefsys>
       </srs>
       <provider encoding="System">ogr</provider>
-      <previewExpression></previewExpression>
+      <previewExpression>COALESCE( "id", '&lt;NULL>' )</previewExpression>
       <vectorjoins/>
       <layerDependencies/>
       <expressionfields/>
@@ -389,7 +389,7 @@
         <multilineenabled fieldname="" on=""/>
         <selectedonly on=""/>
       </labelattributes>
-      <annotationform></annotationform>
+      <annotationform>.</annotationform>
       <aliases>
         <alias field="id" index="0" name=""/>
       </aliases>
@@ -397,12 +397,15 @@
       <excludeAttributesWFS/>
       <attributeactions default="-1"/>
       <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="-1123776416">
-        <columns/>
+        <columns>
+          <column width="-1" hidden="0" type="field" name="id"/>
+          <column width="-1" hidden="1" type="actions"/>
+        </columns>
       </attributetableconfig>
-      <editform></editform>
+      <editform>.</editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath></editforminitfilepath>
+      <editforminitfilepath>.</editforminitfilepath>
       <editforminitcode><![CDATA[]]></editforminitcode>
       <featformsuppress>0</featformsuppress>
       <editorlayout>generatedlayout</editorlayout>
@@ -413,6 +416,12 @@
       </conditionalstyles>
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="100000" simplifyDrawingHints="1" readOnly="0" minLabelScale="1" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="1" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <extent>
+        <xmin>30.82971339999999927</xmin>
+        <ymin>53.45831439999999901</ymin>
+        <xmax>35.29794480000000334</xmax>
+        <ymax>56.02102049999999878</ymax>
+      </extent>
       <id>building_polygon20111013132720092</id>
       <datasource>./data/building-polygon.shp</datasource>
       <keywordList>

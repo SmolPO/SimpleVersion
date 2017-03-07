@@ -1,4 +1,5 @@
 # coding=utf-8
+from code import interact
 
 from SendHandler import Send_Handler
 from MsgBox import *
@@ -34,12 +35,13 @@ from PyQt4.QtGui import *
 #             self._mDragging = False
 #         else:
 #             pass
+from MyQgisIface import Qgis_iface
 
 class ToolMapInfo(QgsMapTool, QWidget):
     def __init__(self, canvas, *args):
         QgsMapTool.__init__(self, canvas)
         self.canvas = canvas
-        self.ind_luminaries, self.feature_dict, self.connection = args
+        self.ind_luminaries, self.feature_dict, self.connection, self.lumlayer = args
         self.init_custom_menu()
         self.menu = QMenu()
         self.w = 10  # ширина области, в которой курсор определяет точки на слое
@@ -65,19 +67,16 @@ class ToolMapInfo(QgsMapTool, QWidget):
         :param pos:
         :return:
         """
-        intersect = self.ind_luminaries.intersects(self.get_area(pos.x(), pos.y()))
-        if not intersect:
-            print ("not point")
+        if not self.is_near_luminaries(pos.x(), pos.y()):
+            print ("Not lum")
             return
-        # запоминаем выбранный фонарь. intersect - list, берем первый элемент. Больше в нем и не должно быть
-        self.tmp_luminary = intersect[0]
+        self.set_cur_luminary()
 
         self.menu.addAction(self.on_action_)
         self.menu.addAction(self.off_action_)
         self.menu.addAction(self.on_off_action_)
         self.menu.addAction(self.some_cmd_)
         self.menu.exec_(self.canvas.mapToGlobal(pos))
-
 
     # обработчики контекстного меню
     def on_action(self):
@@ -155,16 +154,17 @@ class ToolMapInfo(QgsMapTool, QWidget):
     def get_pos(self, obj):
         return obj.pos().x(), obj.pos().y()
 
+    def get_cur_luminary(self, x, y):
+        intersect = self.ind_luminaries.intersects(self.get_area(x, y))
+        return intersect[0] if intersect else None
+
     # перемещение курсора
     def canvasMoveEvent(self, event):
         x = event.pos().x()
         y = event.pos().y()
-
-        # lum = self.get_luninaries_id()
-        # if not lum:
-        #     er_message_box("No lum!((")
-        #     return
-        #     # TODO!!! увеличить размер точки, над которой расположен курсор
+        if self.is_near_luminaries(x, y):
+            feature_id = self.get_cur_luminary(x, y)
+            Qgis_iface().modify_point_on_cursor(feature_id)
 
     # нажатие клавиши
     def canvasReleaseEvent(self, event):
@@ -174,4 +174,12 @@ class ToolMapInfo(QgsMapTool, QWidget):
         point = self.canvas.getCoordinateTransform().toMapCoordinates(x, y)
         # обработка клика
         # вывести контекстное меню
+        Qgis_iface().modify_point_on_cursor(x, y)
         self.init_context_menu(event.pos())
+
+    def is_near_luminaries(self, x, y):
+        intersect = self.ind_luminaries.intersects(self.get_area(x, y))
+        return True if intersect else False
+
+    def set_cur_luminary(self, feature_id):
+        self.tmp_luminary = feature_id

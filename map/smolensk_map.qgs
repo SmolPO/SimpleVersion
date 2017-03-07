@@ -34,10 +34,10 @@
   <mapcanvas>
     <units>degrees</units>
     <extent>
-      <xmin>32.07666186077507575</xmin>
-      <ymin>54.76949611916666782</ymin>
-      <xmax>32.09642957277584685</xmax>
-      <ymax>54.78789319541670721</ymax>
+      <xmin>32.06197432375384437</xmin>
+      <ymin>54.76809443716665982</ymin>
+      <xmax>32.10150974775538657</xmax>
+      <ymax>54.8048885896667386</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>0</projections>
@@ -119,7 +119,7 @@
         <ymax>54.85021384409965606</ymax>
       </extent>
       <id>Clipped20170221060531013</id>
-      <datasource>../../../../.qgis2/processing/outputs/smolensk.shp</datasource>
+      <datasource>/home/kis/.qgis2//processing/outputs/smolensk.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -474,7 +474,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>54.8495088000000024</ymax>
       </extent>
       <id>Clipped20170221060751092</id>
-      <datasource>../../../../.qgis2/processing/outputs/building_pol_sm.shp</datasource>
+      <datasource>/home/kis/.qgis2//processing/outputs/building_pol_sm.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -811,7 +811,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>54.84482198090555727</ymax>
       </extent>
       <id>Clipped20170221061018557</id>
-      <datasource>../../../../.qgis2/processing/outputs/vegetation_pol_sm.shp</datasource>
+      <datasource>/home/kis/.qgis2//processing/outputs/vegetation_pol_sm.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1106,7 +1106,7 @@ def my_form_open(dialog, layer, feature):
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <id>Clipped20170221061133822</id>
-      <datasource>../../../../.qgis2/processing/outputs/water_pol_sm.shp</datasource>
+      <datasource>/home/kis/.qgis2//processing/outputs/water_pol_sm.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1407,7 +1407,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>54.83552294079875367</ymax>
       </extent>
       <id>Clipped20170221062237844</id>
-      <datasource>../../../../.qgis2/processing/outputs/roads_line_sm.shp</datasource>
+      <datasource>/home/kis/.qgis2//processing/outputs/roads_line_sm.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1490,7 +1490,7 @@ def my_form_open(dialog, layer, feature):
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="11,12,17,255"/>
+              <prop k="line_color" v="100,116,64,255"/>
               <prop k="line_style" v="solid"/>
               <prop k="line_width" v="0.52"/>
               <prop k="line_width_unit" v="MM"/>
@@ -1766,7 +1766,7 @@ def my_form_open(dialog, layer, feature):
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Line" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <id>Clipped20170221062335827</id>
-      <datasource>../../../../.qgis2/processing/outputs/railway_line_sm.shp</datasource>
+      <datasource>/home/kis/.qgis2//processing/outputs/railway_line_sm.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1906,7 +1906,7 @@ def my_form_open(dialog, layer, feature):
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Line" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <id>Clipped20170221062444115</id>
-      <datasource>../../../../.qgis2/processing/outputs/highway_line_sm.shp</datasource>
+      <datasource>/home/kis/.qgis2//processing/outputs/highway_line_sm.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -2072,7 +2072,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>54.78426490544899252</ymax>
       </extent>
       <id>lum_point20170217130641055</id>
-      <datasource>./data/lum_point.shp</datasource>
+      <datasource>/home/kis/LC/SimpleVersion/SimpleClient/map/data/lum_point.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -2347,7 +2347,7 @@ def my_form_open(dialog, layer, feature):
         </symbol>
       </SingleCategoryDiagramRenderer>
       <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
-      <annotationform>.</annotationform>
+      <annotationform>/home/kis/LC/SimpleVersion/SimpleClient/map</annotationform>
       <aliases>
         <alias field="id" index="0" name=""/>
         <alias field="num_line" index="1" name=""/>
@@ -2368,10 +2368,10 @@ def my_form_open(dialog, layer, feature):
           <column width="-1" hidden="1" type="actions"/>
         </columns>
       </attributetableconfig>
-      <editform>.</editform>
+      <editform>/home/kis/LC/SimpleVersion/SimpleClient/map</editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath>.</editforminitfilepath>
+      <editforminitfilepath>/home/kis/LC/SimpleVersion/SimpleClient/map</editforminitfilepath>
       <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
 """
 QGIS forms can have a Python function that is called when the form is
