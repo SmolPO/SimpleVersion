@@ -4,7 +4,7 @@
 """
 from itertools import count
 
-import Configurate as cnf
+import Config as cnf
 from Commands import *
 from GlobalsVariables import global_data as glb_d
 from MsgBox import *

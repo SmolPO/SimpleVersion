@@ -1,20 +1,16 @@
 # coding=utf-8
 from qgis.gui import *
-from qgis.core import *
-from PyQt4.Qt import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from qgis.core import * #QgsApplication
+from PyQt4 import QtCore
 
 import sys
 from itertools import count
 
-from threading import Thread
-
-#from qgis._core.QgsMarkerSymbolV2 import QgsMarkerSymbolV2
-
-from Configurate import ntuple_attrs
+from Config import ntuple_attrs
 from Connection_ import Connection_
+from Commands import *
 from GlobalsVariables import global_data as glb_d
+
 from MainWindow_ui import Ui_MainWindow
 from MsgBox import *
 from SendHandler import Send_Handler
@@ -27,8 +23,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings = QSettings("MPEI", "LightControlClient")
         #        self.restoreGeometry(settings.value("geometry").toByteArray())
         #       self.restoreState(settings.value("windowState").toByteArray())
-        self.icon_on = QIcon(":/images/bulb_on.png") # включенный фонарь
-        self.icon_off = QIcon(":/images/bulb_off.png") # выкюченный фонарь
+
         self.init_canvas()
         self.iface = QgisInterface
         #self.layer_load()
@@ -42,21 +37,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.layout.addWidget(self.canvas)
 
         self.connection = Connection_(self)
-        exp = QgsExpression("num_line ILIKE \'%1\'")
-        request = QgsFeatureRequest(exp);
-        request.setSubsetOfAttributes([99, 99, 99, 99, "AA"])
-      #  features = self.lumlayer.setSelectedFeatures([1, 2])
+
         self.init_tools()
         self.init_components()
-    #    self.modify_attributs(self.lumlayer, 4, 4,'TT')
-    #    self.add_point(self.lumlayer, QgsPoint(123, 456), [88, 89, 90, 91, 'T88'])
-    #    self.delete_feature_from_id(self.lumlayer, 4)
         self.init_luminaries()
         self.canvas.show()
         self.canvas.refresh()
         self.pan()
-        self.is_connect = False
-
 
       # ---- Соединение и общение с сервером ----
     def connect_(self):
@@ -66,13 +53,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Send_Handler().send_some_cmd(self.connection)
 
     ### ---- сообщение об ошибки соединения с сервером ----
-    def closeEvent(self, event):
-        settings = QSettings("MPEI", "LightControlClient")
-        settings.setValue("geometry", self.saveGeometry())
-        settings.setValue("windowState", self.saveState())
-        QMainWindow.closeEvent(self, event)
 
     def treeItemDoubleClicked(self, item, column):
+        """
+        переход к фонарю на карте при нажатие на иконку справа на панеле
+        :param item: сам элемент
+        :param column: номер колонки, по которой нажали
+        :return:
+        """
         if item.childCount() > 0: return
         name_luminaries = item.data(0, 0) # получить текст из первого поля в строке в дереве фонарей
         iter = self.lumlayer.getFeatures()
@@ -137,6 +125,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connect(self.treeWidget, SIGNAL("itemDoubleClicked(QTreeWidgetItem*, int)"), self.treeItemDoubleClicked)
 
     def init_components(self):
+        self.icon_on = QIcon(":/images/bulb_on.png")  # включенный фонарь
+        self.icon_off = QIcon(":/images/bulb_off.png")  # выкюченный фонарь
+
         self.topA = QTreeWidgetItem(["LINE_A", "", ""], 0)
         self.topB = QTreeWidgetItem(["LINE_B", "", ""], 0)
         self.topC = QTreeWidgetItem(["LINE_C", "", ""], 0)
@@ -180,9 +171,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.msg_model.setHeaderData(0, Qt.Horizontal, u"Фонарь")
         self.msg_model.setHeaderData(1, Qt.Horizontal, u"Сообщение")
-        colom = self.msg_model.cur_msg.next()
-        self.msg_model.setData(self.msg_model.index(colom, 0), u"A1", Qt.DisplayRole);
-        self.msg_model.setData(self.msg_model.index(colom, 1), u"включение", Qt.DisplayRole);
+        number_row = self.msg_model.cur_msg.next()
+        self.msg_model.setData(self.msg_model.index(number_row, 0), u"A1", Qt.DisplayRole);
+        self.msg_model.setData(self.msg_model.index(number_row, 1), u"включение", Qt.DisplayRole);
 
         self.listErrors.setModel(self.model)
         self.listMessage.setModel(self.msg_model)
@@ -281,8 +272,64 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.topD.addChild(lum)
 
+    def closeEvent(self, event):
+        settings = QSettings("MPEI", "LightControlClient")
+        settings.setValue("geometry", self.saveGeometry())
+        settings.setValue("windowState", self.saveState())
+        QMainWindow.closeEvent(self, event)
 
+    def add_message_to_message_list(self, message):
+        """
+        из пакета получает отправителя, затем по нему отпределяет имя фонаря
+        по команде выбирает текст сообщения, выводит его
+        :param message:
+        :return:
+        """
+        sender = message.sender
+        feature, attrs = self.find_luminary_from_id(sender)
+        number_row = self.msg_model.cur_msg.next()
+        cmd = message.cmd
+        text_message_to_model = get_text_message_from_cmd(cmd)
+        self.msg_model.setData(self.msg_model.index(number_row, 0), attrs.name, Qt.DisplayRole);
+        self.msg_model.setData(self.msg_model.index(number_row, 1), text_message_to_model, Qt.DisplayRole);
 
+    # поиск фонарей по атрибутам
+    def find_luminaries_from_status(self, status):
+        features = []
+        iter = self.lumlayer.getFeatures()
+        for feat in iter:
+            attrs = ntuple_attrs(*feat.attributes())
+            if attrs.status == status:
+                features.append([feat, attrs])
+        return features
+
+    def find_luminary_from_id(self, feature_id):
+        """
+        возвращает feature
+        :param feature_id:
+        :return:
+        """
+        iter = self.lumlayer.getFeatures()
+        for feat in iter:
+            attrs = ntuple_attrs(*feat.attributes())
+            if attrs.id == feature_id:
+                return feat, attrs
+
+    def find_luminary_from_name(self, name):
+        iter = self.lumlayer.getFeatures()
+        for feat in iter:
+            attrs = ntuple_attrs(*feat.attributes())
+            if attrs.name == name:
+                return feat, attrs
+
+    def find_lumonaries_from_line(self, line):
+        features = []
+        iter = self.lumlayer.getFeatures()
+        for feat in iter:
+            attrs = ntuple_attrs(*feat.attributes())
+            if attrs.id == line:
+                features.append([feat, attrs])
+        return features
 
 def main(app):
 

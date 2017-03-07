@@ -2,12 +2,10 @@
 
 import socket
 
-import Configurate as cnf
-
+import Config as cnf
+from GlobalsVariables import global_data as glb_d
 from MsgBox import *
 from RecvHandler import Recv_Handler
-from DataBase import Data_Base as DB
-from GlobalsVariables import global_data as glb_d
 
 class Connection_:
 
@@ -37,10 +35,10 @@ class Connection_:
             er_message_box("It is bad server!...")
             return False
         self.is_connect = True
-        self.recv_handler = Recv_Handler(self.sock, self.wnd)
-        self.recv_handler.start()
+        self.create_receiver_handler()
         ok_message_box("You are wellcome!")
         return True
+
 
     def authentication(self, sock=None):
 
@@ -68,9 +66,15 @@ class Connection_:
         except:
             return None
 
+    def create_receiver_handler(self):
+        self.recv_handler = Recv_Handler(self.sock, self.wnd)
+        self.recv_handler.start()
+
     def close_connect(self):
         if not self.sock:
             return
         self.sock.close()
         self.is_connect = False
+
+
 

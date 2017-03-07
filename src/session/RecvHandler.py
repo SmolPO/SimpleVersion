@@ -3,12 +3,10 @@
 from threading import Thread
 
 import Commands as CMD
-import Configurate as cnf
-#import _test_
+import Config as cnf
 from DataBase import Data_Base as DB
-from MsgBox import *
-from MyQgisIface import Qgis_iface
 from Handlers import handlers_commands
+from MsgBox import *
 class Recv_Handler(Thread):
     """
 
@@ -18,7 +16,6 @@ class Recv_Handler(Thread):
     connection = None
 
     def __init__(self, socket, wnd):
-
         Thread.__init__(self)
         self.sock    = socket
        # self.connection = connection
@@ -47,15 +44,11 @@ class Recv_Handler(Thread):
             if not msg:
                self.close_session()
                return
-
             current_message = cnf.from_bytes_get_data_message(bytes(msg))
-
             if not current_message:
                 self.close_session()
                 return
-
-            self.add_to_packet_from_main_header(current_message)
-
+            self._add_to_packet_from_main_header_(current_message)
             while current_message.size_next > 0:
                 current_message = cnf.from_bytes_get_data_message(bytes(self.sock.recv(size_next_mess)))
                 if not current_message or self.check_mess(current_message):
@@ -65,37 +58,32 @@ class Recv_Handler(Thread):
                 else:
                     pack.append(current_message.data)
 
-            # прием закончен, добавить в CacheClient
             print("принято!!!")
-            self._add_datas_in_packet(pack)
-            self.analise_packet(self.packet)
+            self._add_datas_in_packet_(pack)
+            self._analise_packet_(self.packet)
 
             pass
         pass #ошибка: разрыв соединения
 
-    def analise_packet(self, packet):
+    def _analise_packet_(self, packet):
         print(packet)
-        colom = self.wnd.msg_model.cur_msg.next()
-        id_ = 0
-        msg = 1
+        self.wnd.add_message_to_message_list(packet)
         if packet == cnf.init_ntuple_data_message():
             print("empty packet...")
             return False
-        feature_id = self.get_feature_id(packet)
-        if packet.cmd == CMD.OFF_LIGHT:
-            self.handler_command.on_light(feature_id)
-            self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, id_), str(packet.recv), Qt.DisplayRole);
-            self.wnd.msg_model.setData(self.wnd.msg_model.index(colom, msg), "off", Qt.DisplayRole);
 
+        feature_id = self._get_luminaries_feat_from_id_(packet)
+        if packet.cmd == CMD.OFF_LIGHT:
+            self.handler_command.off_light(feature_id)
             print("OFF LIGHT")
         elif packet.cmd == CMD.ON_LIGHT:
-            self.handler_command.off_light(feature_id)
+            self.handler_command.on_light(feature_id)
             print("ON LIGHT")
         elif packet.cmd:
             print("SOME CMD")
         return True
 
-    def get_luminary_from_id(self, id):
+    def _get_luminaries_feat_from_id_(self, id):
         iter = self.wnd.lumlayer.getFeatures()
         for feat in iter:
             attrs = cnf.ntuple_attrs(*feat.attributes())
@@ -103,16 +91,16 @@ class Recv_Handler(Thread):
                 return feat
         return None
 
-    def get_feature_id(self, packet):
+    def _get_sender_as_feature_id_(self, packet):
         """
         возвращает id отправителя.
         :param packet:
         :return:
         """
-        return packet.sener
+        return packet.sender
 
     # преорабразование сообщения
-    def parse_message(self, mess):
+    def _parse_message_(self, mess):
         """
         аналог функции from_bytes_to_data_mesage(), только разбивает байты
         не используется
@@ -128,7 +116,7 @@ class Recv_Handler(Thread):
 
         return cnf.ntuple_data_message(id_, cmd, sender, receiver, data, size_next_mess), size_next_mess
 
-    def parse_data(self, mess):
+    def _parse_data_(self, mess):
         """
         парсит последующие после ЗС сообщения
         не используется
@@ -141,7 +129,7 @@ class Recv_Handler(Thread):
         return data, size_next
 
     # добавление в переменные класса
-    def add_to_packet_from_main_header(self, main_hdr):
+    def _add_to_packet_from_main_header_(self, main_hdr):
 
         self.packet = self.packet._replace(
             id=main_hdr.id,
@@ -152,7 +140,7 @@ class Recv_Handler(Thread):
             data=main_hdr.data
         )
 
-    def _add_datas_in_packet(self, data):
+    def _add_datas_in_packet_(self, data):
 
         if not data:
             data_to_str = ''
@@ -169,7 +157,7 @@ class Recv_Handler(Thread):
             str(self.packet.data) + data_to_str,
         )
 
-    # проверка сообщения
+    # проверка сообщения, что сообщения относятся к одной цепочке собщений
     def check_mess(self, mess):
         """
         проверяет, что поля cmd и sender соответствуют данным из текущего пакета
