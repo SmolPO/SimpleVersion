@@ -7,26 +7,24 @@ import Config as cnf
 from DataBase import Data_Base as DB
 from Handlers import handlers_commands
 from MsgBox import *
-class Recv_Handler(Thread):
-    """
 
-    """
-    is_conn = True # есть ли связь с клиентом
+class Recv_Handler_cl(Thread):
+
+    is_connect_to_server = True # есть ли связь с клиентом
     sock       = None
     connection = None
 
     def __init__(self, socket, wnd):
         Thread.__init__(self)
         self.sock    = socket
-       # self.connection = connection
         self.wnd = wnd
         self.packet = cnf.init_ntuple_data_message()
-        self.handler_command = handlers_commands(wnd.luminary, wnd)
+        self.handler_command = handlers_commands(wnd.lumlayer, wnd)
         pass
 
     def run(self):
         print("recv handler start...")
-        while self.is_conn:
+        while self.is_connect_to_server:
             # CLIENT___________________________________________________
             # инициализируем и чистим значения при последующих циклах
             pack            = []  # сборка цепочки сообщений
@@ -182,7 +180,7 @@ class Recv_Handler(Thread):
         return True
 
     def close_session(self):
-        Recv_Handler.is_conn = False
+        Recv_Handler_cl.is_connect_to_server = False
         er_message_box("reset connect... (((")
         DB().mess_to_log("reset connect...")
         self.sock.close()

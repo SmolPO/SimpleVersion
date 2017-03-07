@@ -5,10 +5,9 @@ import socket
 import Config as cnf
 from GlobalsVariables import global_data as glb_d
 from MsgBox import *
-from RecvHandler import Recv_Handler
+from RecvHandler_cl import Recv_Handler_cl
 
 class Connection_:
-
     def __init__(self, wnd):
         self.recv_handler = None
         self.sock = None
@@ -24,7 +23,7 @@ class Connection_:
         print("connection start....")
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            if self.sock.connect((cnf.server_address, cnf.PORT)) == -1:
+            if self.sock.connect((cnf.server_address, cnf.PORT + 1)) == -1:
                 er_message_box("Not connect")
                 return False
         except:
@@ -67,7 +66,7 @@ class Connection_:
             return None
 
     def create_receiver_handler(self):
-        self.recv_handler = Recv_Handler(self.sock, self.wnd)
+        self.recv_handler = Recv_Handler_cl(self.sock, self.wnd)
         self.recv_handler.start()
 
     def close_connect(self):

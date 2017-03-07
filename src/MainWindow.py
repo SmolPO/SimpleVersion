@@ -5,7 +5,7 @@ from PyQt4 import QtCore
 
 import sys
 from itertools import count
-
+import Config
 from Config import ntuple_attrs
 from Connection_ import Connection_
 from Commands import *
@@ -23,6 +23,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings = QSettings("MPEI", "LightControlClient")
         #        self.restoreGeometry(settings.value("geometry").toByteArray())
         #       self.restoreState(settings.value("windowState").toByteArray())
+        Config.address_db = "empty"
+        print (Config.address_db)
 
         self.init_canvas()
         self.iface = QgisInterface
@@ -63,15 +65,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         if item.childCount() > 0: return
         name_luminaries = item.data(0, 0) # получить текст из первого поля в строке в дереве фонарей
-        iter = self.lumlayer.getFeatures()
-        for feat in iter:
-            attrs = ntuple_attrs(*feat.attributes())
-            if attrs.name == name_luminaries:
-                # перевод карты к фонарю
-                rect = QgsRectangle()
-                rect.scale(self.canvas.scale(), feat.geometry().asPoint())
-                self.canvas.setExtent(rect)
-                self.canvas.refresh()
+        feat = self.find_luminary_from_name(name_luminaries)
+        rect = QgsRectangle()
+        rect.scale(self.canvas.scale(), feat.geometry().asPoint())
+        self.canvas.setExtent(rect)
+        self.canvas.refresh()
 
     # ---- инструменты карты ----
     def zoom_in(self):
@@ -272,11 +270,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.topD.addChild(lum)
 
-    def closeEvent(self, event):
-        settings = QSettings("MPEI", "LightControlClient")
-        settings.setValue("geometry", self.saveGeometry())
-        settings.setValue("windowState", self.saveState())
-        QMainWindow.closeEvent(self, event)
 
     def add_message_to_message_list(self, message):
         """
@@ -330,6 +323,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if attrs.id == line:
                 features.append([feat, attrs])
         return features
+
+    def closeEvent(self, event):
+        settings = QSettings("MPEI", "LightControlClient")
+        settings.setValue("geometry", self.saveGeometry())
+        settings.setValue("windowState", self.saveState())
+        QMainWindow.closeEvent(self, event)
+
 
 def main(app):
 
