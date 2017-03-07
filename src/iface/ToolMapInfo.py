@@ -1,41 +1,15 @@
 # coding=utf-8
-from code import interact
-
-from SendHandler import Send_Handler
-from MsgBox import *
 from qgis.gui import *
-
 from qgis.core import *
-
 from PyQt4.Qt import *
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-# class InfoMapTool(QgsMapToolPan):
-#     _mDragging = False
-#
-#     def __init__(self, canvas):
-#         QgsMapToolPan.__init__(self, canvas)
-#
-#     def canvasMoveEvent(self, event):
-#         if self._mDragging and (event.buttons() & Qt.LeftButton) == Qt.LeftButton:
-#             self.canvas().panAction(event)
-#
-#     def canvasPressEvent(self, event):
-#         if event.button() == Qt.LeftButton:
-#             print("PRESS Event!")
-#             self._mDragging = True
-#
-#     def canvasIndetity(self, event):
-#         if event.button() == Qt.LeftButton:
-#             print("MapInfoIndetity")
-#
-#     def canvasReleaseEvent(self, event):
-#         if self._mDragging and event.button() == Qt.LeftButton:
-#             self.canvas().panActionEnd(event.pos())
-#             self._mDragging = False
-#         else:
-#             pass
+from PyQt4.QtCore import *
+
+
+from MsgBox import *
 from MyQgisIface import Qgis_iface
+from SendHandler import Send_Handler
+
 
 class ToolMapInfo(QgsMapTool, QWidget):
     def __init__(self, canvas, *args):
@@ -164,7 +138,7 @@ class ToolMapInfo(QgsMapTool, QWidget):
         y = event.pos().y()
         if self.is_near_luminaries(x, y):
             feature_id = self.get_cur_luminary(x, y)
-            Qgis_iface().modify_point_on_cursor(feature_id)
+            Qgis_iface().modify_point_on_cursor(feature_id, self.lumlayer)
 
     # нажатие клавиши
     def canvasReleaseEvent(self, event):
@@ -174,7 +148,7 @@ class ToolMapInfo(QgsMapTool, QWidget):
         point = self.canvas.getCoordinateTransform().toMapCoordinates(x, y)
         # обработка клика
         # вывести контекстное меню
-        Qgis_iface().modify_point_on_cursor(x, y)
+        Qgis_iface().modify_point_on_cursor(y, x)
         self.init_context_menu(event.pos())
 
     def is_near_luminaries(self, x, y):

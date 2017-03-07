@@ -1,10 +1,10 @@
 # coding=utf-8
 from qgis._core import QgsVectorDataProvider, QgsFeature
 
-from Configurate import STATUS_LUMINARY, COLOR_STATUS
+from Config import STATUS_LUMINARY, COLOR_STATUS
 
 class Qgis_iface:
-    def modify_all_attributes(self, layer, feature_id, attrs):
+    def modify_all_attributes(self, feature_id, attrs, layer):
         """
         изменяет значение поля атрибута
         :param layer: слой
@@ -13,13 +13,12 @@ class Qgis_iface:
         :param val: значение
         :return: bool
         """
-
         caps = layer.dataProvider().capabilities()
         if caps & QgsVectorDataProvider.ChangeAttributeValue:
             res = layer.dataProvider().changeAttributes({feature_id : attrs})
             return res
 
-    def modify_point_on_cursor(self, layer, features_id):
+    def modify_point_on_cursor(self, features_id, layer):
         """
          изменение размера объекта под курсором
         :param layer: слой
@@ -30,7 +29,21 @@ class Qgis_iface:
 
         pass
 
-    def add_point(self, layer, location_point, attributes):
+    def modify_from_query(self, val, field, layer):
+        """
+        изменение атрибутов по запросу
+        :param layer:
+        :param field:
+        :param val:
+        :return:
+        """
+        exp = QgsExpression("num_line ILIKE \'%1\'")
+        request = QgsFeatureRequest(exp);
+        attrs = [99, 99, 99, 99, "D99"]
+        # TODO как по запросу изменить только некоторые поля!!!
+        request.setSubsetOfAttributes(attrs)
+
+    def add_point(self, attributes, location_point, layer):
         """
         добавление точки по координатам
         :param layer:
@@ -48,7 +61,7 @@ class Qgis_iface:
             return res
         pass
 
-    def delete_feature_from_id(self, layer, features_id):
+    def delete_feature_from_id(self, features_id, layer):
         """
         удаляеет точку по id
         :param layer:
@@ -61,7 +74,7 @@ class Qgis_iface:
             return res
         pass
 
-    def modify_location(self, layer, features_id, new_point):
+    def modify_location(self, new_point, features_id, layer):
         """
         изменить координаты существующей точки
         :param layer:
@@ -75,7 +88,7 @@ class Qgis_iface:
             layer.dataProvider().changeGeometryValues({features_id: geom})
         pass
 
-    def modify_color_point(self, layer, feature_id, new_color):
+    def modify_color_point(self, new_color, feature_id, layer):
         """
         установить новый цвет точки
         :param layer:
@@ -86,7 +99,7 @@ class Qgis_iface:
 
         pass
 
-    def modify_status_luminary(self, layer, feature_id, new_status):
+    def modify_status_luminary(self, new_status, feature_id, layer):
         caps = layer.dataProvider().capabilities()
         iter = layer.getFeatures()
         field_status = 3 # номер поля статус в таблице атрибутов
@@ -100,7 +113,7 @@ class Qgis_iface:
             res = layer.dataProvider().changeAttributes({feature_id: attrs})
             return res
 
-    def modify_attr_point(self, layer, features_id, new_attrs):
+    def modify_attr_point(self, new_attrs, features_id, layer):
         """
         изменяет атрибут элемента
         :param fid:
@@ -111,16 +124,17 @@ class Qgis_iface:
         if caps & QgsVectorDataProvider.ChangeAttributeValues:
             layer.dataProvider().changeAttributeValues({features_id: new_attrs})
 
-    def set_on_light(self, layer, features_id):
-        self.modify_status_luminary(layer, features_id, STATUS_LUMINARY['on'])
-        self.modify_color_point(layer, features_id, COLOR_STATUS['on']) # TODO зашить цвета
+    def set_on_light(self, features_id, layer):
+        self.modify_status_luminary(STATUS_LUMINARY['on'], features_id, layer)
+        self.modify_color_point(COLOR_STATUS['on'], features_id, layer)  # TODO зашить цвета
         pass
 
-    def set_off_light(self, layer, features_id):
-        self.modify_status_luminary(layer, features_id, STATUS_LUMINARY['off'])
-        self.modify_color_point(layer, features_id, COLOR_STATUS['off'])
+    def set_off_light(self, features_id, layer):
+        self.modify_status_luminary(STATUS_LUMINARY['off'], features_id, layer)
+        self.modify_color_point(COLOR_STATUS['off'], features_id, layer)
         pass
-    def set_disconnect_light(self, layer, feature_id):
+
+    def set_disconnect_light(self, feature_id, layer):
 
         pass
         # radius_point = 10

@@ -2,6 +2,7 @@
 
 ON_LIGHT = 1
 OFF_LIGHT = 2
+DISCONNECT = 3
 
 class Commands:
     """
@@ -15,6 +16,7 @@ class Commands:
     301 - 399 - СВ
 
     """
+
     class SrvCmd:
         DISCONN_SV  = 101
         NEW_PP      = 102
@@ -44,3 +46,16 @@ class Commands:
         ON_LIGHT    = 301
         OF_LIGTH    = 302
         PROBLEM     = 303
+
+def get_text_message_from_cmd(cmd):
+    """
+    получить текствое сообщение ипо номеру команды
+    :param cmd:
+    :return:
+    """
+    if cmd == ON_LIGHT:
+        return u"включени"
+    elif cmd == OFF_LIGHT:
+        return u"выключени"
+    elif cmd == DISCONNECT:
+        return u"разрыв соединения"

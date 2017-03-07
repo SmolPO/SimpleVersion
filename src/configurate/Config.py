@@ -131,3 +131,4 @@ def from_bytes_get_data_message(by_data, size_field=4, charset="utf-8"):
 
 def init_ntuple_data_message():
     return ntuple_data_message(None, None, None, None, None, None)
+
