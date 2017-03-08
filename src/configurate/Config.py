@@ -101,7 +101,7 @@ def to_bytes_from_data_message(data, size_field=4, end_symbol ='0', charset="utf
 def from_bytes_get_data_message(by_data, size_field=4, charset="utf-8"):
     """
      проверяет:
-     - длинна больше минимально возможной
+     - длина больше минимально возможной
      - тип входных данных
 
     :param by_data: bytes
@@ -125,7 +125,6 @@ def from_bytes_get_data_message(by_data, size_field=4, charset="utf-8"):
     receiver_  = int(str_res[receiver_slice])
     size_next_ = int(str_res[size_next_mess_slice])
     data_      = int(str_res[data_slice])
-
 
     return ntuple_data_message(id_, cmd_, sender_, receiver_, size_next_, data_)
 
