@@ -42,7 +42,7 @@ class Connection_:
     def authentication(self, sock=None):
 
         try:
-            if not sock.send(cnf.MY_TYPE):
+            if not sock.send(cnf.type_receivers['client']):
                 er_message_box("Пароль не отправлен")
                 return False
             data = sock.recv(1)

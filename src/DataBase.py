@@ -1,6 +1,6 @@
 # coding=utf-8
 from threading import Thread
-# TODO добавить базу данных
+
 import psycopg2
 
 # пока не используется

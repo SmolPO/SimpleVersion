@@ -104,7 +104,7 @@ class Qgis_iface:
         iter = layer.getFeatures()
         field_status = 3 # номер поля статус в таблице атрибутов
         attrs = None # если цикл ниже не найдет объект, то это вызовет ошибку в коде
-        for feat in iter:                       # TODO получить объект по id
+        for feat in iter:
             if feat.id() == feature_id:
                 attrs = feat.attributes()
 
@@ -126,7 +126,7 @@ class Qgis_iface:
 
     def set_on_light(self, features_id, layer):
         self.modify_status_luminary(STATUS_LUMINARY['on'], features_id, layer)
-        self.modify_color_point(COLOR_STATUS['on'], features_id, layer)  # TODO зашить цвета
+        self.modify_color_point(COLOR_STATUS['on'], features_id, layer)
         pass
 
     def set_off_light(self, features_id, layer):

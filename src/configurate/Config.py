@@ -20,7 +20,7 @@
 from collections import namedtuple
 
 # глобальные переменные
-MY_TYPE = 'Cl'
+type_receivers = dict(pp=1, client=2, server=3)
 
 # размеры полей в байтах
 SIZE_FIELD     = 4 # универсальный размер поля для всех полей

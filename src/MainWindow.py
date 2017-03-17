@@ -67,7 +67,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         name_luminaries = item.data(0, 0) # получить текст из первого поля в строке в дереве фонарей
         feat = self.find_luminary_from_name(name_luminaries)
         rect = QgsRectangle()
-        rect.scale(self.canvas.scale(), feat.geometry().asPoint())
+        rect.scale(self.canvas.scale(), feat.geometry().asPoint()) # TODO !!!
         self.canvas.setExtent(rect)
         self.canvas.refresh()
 
@@ -229,7 +229,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def init_luminaries(self):
         # добавление списка узлов
-        # TODO заменить attrs на numtaples
         iter = self.lumlayer.getFeatures()
         not_working = 1
         broke = 2

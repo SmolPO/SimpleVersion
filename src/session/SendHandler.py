@@ -35,10 +35,15 @@ class Send_Handler:
         """
         id = next(self.cur_id)
         packet = []
-        # TODO пересылка файлов
+
         size_next_msg = 0
         mess = cnf.ntuple_data_message(id, cmd, glb_d.get_self_id(), receiver, size_next_msg, data)
         return cnf.to_bytes_from_data_message(mess)
+
+    def send_file(self):
+        # TODO пересылка файлов
+        pass
+        return
 
     def on_light_cmd(self, lum, sock):
         print (lum)
