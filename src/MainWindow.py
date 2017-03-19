@@ -63,7 +63,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         name_luminaries = item.data(0, 0) # получить текст из первого поля в строке в дереве фонарей
         feature, some = self.get_luminary_from_name(name_luminaries)
         rect = QgsRectangle()
-        rect.scale(self.canvas.scale(), feature.geometry().asPoint()) # TODO !!!
+        rect.scale(self.canvas.scale(), feature.geometry().asPoint())
         self.canvas.setExtent(rect)
         self.canvas.refresh()
 

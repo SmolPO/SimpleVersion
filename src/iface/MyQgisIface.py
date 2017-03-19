@@ -106,7 +106,6 @@ class Qgis_iface:
         field_status = 3 # номер поля статус в таблице атрибутов
         attrs = [] # если цикл ниже не найдет объект, то это вызовет ошибку в коде
         attrs_as_dict = {}
-        # TODO сдеалть обращение через список feat_dictinory
 
         for feat in iter:
             if feat.id() == feature_id:
@@ -122,7 +121,7 @@ class Qgis_iface:
             pass
 
         layer.commitChanges()
-        layer.endEditCommand("end")
+        layer.endEditCommand()
 
     def modify_attr_point(self, new_attrs, features_id, layer):
         """
@@ -146,23 +145,3 @@ class Qgis_iface:
     def set_disconnect_light(self, features_id, layer):
         self.modify_status_luminary(STATUS_LUMINARY['disconnet'], features_id, layer)
         pass
-        # radius_point = 10
-        # color_green = (0, 255, 0)
-        # color_black = (0, 0, 0)
-        # self.point = self.toMapCoordinates(pos)
-        # print (self.point.x(), self.point.y())
-        # m = QgsVertexMarker(self.canvas)
-        # m.setCenter(self.point)
-        # m.setColor(QColor(*color_green))
-        # m.setIconSize(radius_point)
-        # # TODO сделать маркер нужного вида
-        # m.setIconType(QgsVertexMarker.ICON_CIRCLE)  # or ICON_CROSS, ICON_X
-        # m.setPenWidth(radius_point)
-        # l = dir(m)
-        # for i in l:
-        #     print (i)
-        # print ("end")
-        # m.shape()
-        # m.setBoundingRegionGranularity(2)
-        #  m.setColor(QColor(*color_black))
-        # m.setPenWidth(2)
