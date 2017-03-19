@@ -8,7 +8,7 @@ class Global_variables:
         self.__MAX_CONNECT__ = 10
         self.__BUFFER_SIZE__ = 30
         self.__my_type__ = 'Cl'
-        self.__luminaries_name__ = 'lum_point'
+        self.__luminaries_name__ = 'luminaries'
 
     def set_self_id(self, val):
         self.__self_id__ = val

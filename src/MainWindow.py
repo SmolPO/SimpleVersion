@@ -23,9 +23,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings = QSettings("MPEI", "LightControlClient")
         #        self.restoreGeometry(settings.value("geometry").toByteArray())
         #       self.restoreState(settings.value("windowState").toByteArray())
-        Config.address_db = "empty"
-        print (Config.address_db)
-
         self.init_canvas()
         self.iface = QgisInterface
         #self.layer_load()
@@ -47,15 +44,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas.refresh()
         self.pan()
 
-      # ---- Соединение и общение с сервером ----
+    # ---- Соединение и общение с сервером ----
     def connect_(self):
-       self.connection.connect()
+        self.connection.connect()
 
     def send_cmd(self):
         Send_Handler().send_some_cmd(self.connection)
 
-    ### ---- сообщение об ошибки соединения с сервером ----
-
+    # ---- сообщение об ошибки соединения с сервером ----
     def treeItemDoubleClicked(self, item, column):
         """
         переход к фонарю на карте при нажатие на иконку справа на панеле
@@ -65,9 +61,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         if item.childCount() > 0: return
         name_luminaries = item.data(0, 0) # получить текст из первого поля в строке в дереве фонарей
-        feat = self.find_luminary_from_name(name_luminaries)
+        feature, some = self.get_luminary_from_name(name_luminaries)
         rect = QgsRectangle()
-        rect.scale(self.canvas.scale(), feat.geometry().asPoint()) # TODO !!!
+        rect.scale(self.canvas.scale(), feature.geometry().asPoint()) # TODO !!!
         self.canvas.setExtent(rect)
         self.canvas.refresh()
 
@@ -191,7 +187,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if v.name() == glb_d.get_luminaries_name():
                 self.lumlayer = v
             if v.geometryType() == POINT_TYPE:
-                point_layer.append(QgsMapCanvasLayer(v))
+                pass
+               # point_layer.append(QgsMapCanvasLayer(v))
             elif v.geometryType() == LINE_TYPE:
                 line_layer.append(QgsMapCanvasLayer(v))
             elif v.geometryType() == POLYGON_TYPE:
@@ -222,10 +219,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             layer = self.lumlayer
 
         self.feature_dict = {f.id(): f for f in layer.getFeatures()}
-
-        self.ind_luminaries = QgsSpatialIndex()
-        for f in self.feature_dict.values():
-            self.ind_luminaries.insertFeature(f)
+        self.ind_luminaries = QgsSpatialIndex(layer.getFeatures())
 
     def init_luminaries(self):
         # добавление списка узлов
@@ -307,7 +301,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if attrs.id == feature_id:
                 return feat, attrs
 
-    def find_luminary_from_name(self, name):
+    def get_luminary_from_name(self, name):
         iter = self.lumlayer.getFeatures()
         for feat in iter:
             attrs = ntuple_attrs(*feat.attributes())

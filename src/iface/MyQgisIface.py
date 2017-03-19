@@ -18,16 +18,6 @@ class Qgis_iface:
             res = layer.dataProvider().changeAttributes({feature_id : attrs})
             return res
 
-    def modify_point_on_cursor(self, features_id, layer):
-        """
-         изменение размера объекта под курсором
-        :param layer: слой
-        :param features_id:
-        :return:
-        """
-        #
-
-        pass
 
     def modify_from_query(self, val, field, layer):
         """
@@ -38,7 +28,7 @@ class Qgis_iface:
         :return:
         """
         exp = QgsExpression("num_line ILIKE \'%1\'")
-        request = QgsFeatureRequest(exp);
+        request = QgsFeatureRequest(exp)
         attrs = [99, 99, 99, 99, "D99"]
         # TODO как по запросу изменить только некоторые поля!!!
         request.setSubsetOfAttributes(attrs)
@@ -88,30 +78,51 @@ class Qgis_iface:
             layer.dataProvider().changeGeometryValues({features_id: geom})
         pass
 
-    def modify_color_point(self, new_color, feature_id, layer):
+    def get_coordinates_featuer(self, features_id, layer):
         """
-        установить новый цвет точки
+        получить координаты точки
+        :param features_id:
         :param layer:
-        :param id:
-        :param new_color:
-        :return:
+        :return: (x, y)
         """
-
-        pass
-
-    def modify_status_luminary(self, new_status, feature_id, layer):
-        caps = layer.dataProvider().capabilities()
         iter = layer.getFeatures()
-        field_status = 3 # номер поля статус в таблице атрибутов
-        attrs = None # если цикл ниже не найдет объект, то это вызовет ошибку в коде
+        for feature in iter:
+            if feature.id() == features_id:
+                geom = feature.geometry().asPoint()
+                return (geom.x(), geom.y())
+
+    def get_attrs_feature(self, feature_id, layer):
+        iter = layer.getFeatures()
         for feat in iter:
             if feat.id() == feature_id:
                 attrs = feat.attributes()
+                return attrs
 
-        if caps & QgsVectorDataProvider.ChangeAttributeValue:
-            attrs[field_status] = new_status;
-            res = layer.dataProvider().changeAttributes({feature_id: attrs})
-            return res
+    def modify_status_luminary(self, new_status, feature_id, layer):
+        layer.beginEditCommand("Feature triangulation")
+        layer.startEditing()
+        caps = layer.dataProvider().capabilities()
+        iter = layer.getFeatures()
+        field_status = 3 # номер поля статус в таблице атрибутов
+        attrs = [] # если цикл ниже не найдет объект, то это вызовет ошибку в коде
+        attrs_as_dict = {}
+        # TODO сдеалть обращение через список feat_dictinory
+
+        for feat in iter:
+            if feat.id() == feature_id:
+                attrs = feat.attributes()
+                attrs_as_dict = dict(id=attrs[0], line=attrs[1], status=new_status, name=attrs[3])
+                break
+
+        if caps & QgsVectorDataProvider.ChangeAttributeValues:
+            tmp = layer.dataProvider()
+            res = tmp.changeAttributeValues({feature_id: attrs_as_dict})
+            layer.updateExtents()
+            self.get_attrs_feature(feature_id, layer)
+            pass
+
+        layer.commitChanges()
+        layer.endEditCommand("end")
 
     def modify_attr_point(self, new_attrs, features_id, layer):
         """
@@ -126,16 +137,14 @@ class Qgis_iface:
 
     def set_on_light(self, features_id, layer):
         self.modify_status_luminary(STATUS_LUMINARY['on'], features_id, layer)
-        self.modify_color_point(COLOR_STATUS['on'], features_id, layer)
         pass
 
     def set_off_light(self, features_id, layer):
         self.modify_status_luminary(STATUS_LUMINARY['off'], features_id, layer)
-        self.modify_color_point(COLOR_STATUS['off'], features_id, layer)
         pass
 
-    def set_disconnect_light(self, feature_id, layer):
-
+    def set_disconnect_light(self, features_id, layer):
+        self.modify_status_luminary(STATUS_LUMINARY['disconnet'], features_id, layer)
         pass
         # radius_point = 10
         # color_green = (0, 255, 0)
